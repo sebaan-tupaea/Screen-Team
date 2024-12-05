@@ -16,3 +16,14 @@ export async function getMovieById(
 
   return movie as Movie
 }
+
+export async function addMovie(
+  { name, genre, done }: { name: string; genre: string; done: boolean },
+  db = connection,
+): Promise<Movie> {
+  const [newMovie] = await db('movies')
+    .insert({ name, genre, done })
+    .returning(['id', 'name', 'genre', 'done'])
+
+  return newMovie
+}
