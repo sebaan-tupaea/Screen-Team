@@ -31,4 +31,25 @@ router.get('/:id', async (req, res) => {
   }
 })
 
+// POST 'api/v1/movies' - Add new movie
+router.post('/', async (req, res) => {
+  const { title, director, releaseYear } = req.body
+
+  //validate data
+  if (!title || !director || !releaseYear) {
+    return res
+      .status(400)
+      .json({ error: 'All fields (title, director, releaseYear) are required' })
+  }
+  //add movie to db
+  try {
+    const newMovie = await db.addMovie({ title, director, releaseYear })
+    res.status(201).json(newMovie)
+  } catch (error) {
+    //return new movie
+    console.error('Database error:', error)
+    res.status(500).json({ error: 'Failed to add movie' })
+  }
+})
+
 export default router
