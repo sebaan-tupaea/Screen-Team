@@ -31,23 +31,22 @@ router.get('/:id', async (req, res) => {
   }
 })
 
-// POST 'api/v1/movies' - Add new movie
+// POST 'api/v1/movies'
 router.post('/', async (req, res) => {
-  const { title, director, releaseYear } = req.body
+  const { name, genre, done } = req.body
 
   //validate data
-  if (!title || !director || !releaseYear) {
-    return res
-      .status(400)
-      .json({ error: 'All fields (title, director, releaseYear) are required' })
+  if (!name || !genre || done === undefined) {
+    return res.status(400).json({ error: 'Missing required fields' })
   }
-  //add movie to db
+
   try {
-    const newMovie = await db.addMovie({ title, director, releaseYear })
+    //add movie to database
+    const newMovie = await db.addMovie({ name, genre, done })
+
     res.status(201).json(newMovie)
   } catch (error) {
-    //return new movie
-    console.error('Database error:', error)
+    console.error(`Database error: ${error}`)
     res.status(500).json({ error: 'Failed to add movie' })
   }
 })
