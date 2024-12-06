@@ -4,8 +4,15 @@ import AddMovieForm from './AddMovieForm'
 import EditMovie from './EditMovie'
 import MoviesList from './MoviesList'
 
+import { useQueryClient } from '@tanstack/react-query'
+
 function App() {
   const [editingMovie, setEditingMovie] = useState<Movie | null>(null)
+  const queryClient = useQueryClient()
+
+  const handleMovieAdded = () => {
+    queryClient.invalidateQueries({ queryKey: ['movies'] })
+  }
 
   const handleEditClick = (movie: Movie) => {
     setEditingMovie(movie)
@@ -14,6 +21,7 @@ function App() {
   const handleCancelEdit = () => {
     setEditingMovie(null)
   }
+
   return (
     <>
       <div className="app">
@@ -23,11 +31,7 @@ function App() {
             <EditMovie movie={editingMovie} onCancel={handleCancelEdit} />
           ) : (
             <>
-              <AddMovieForm
-                onMovieAdded={function (): void {
-                  throw new Error('Function not implemented.')
-                }}
-              />
+              <AddMovieForm onMovieAdded={handleMovieAdded} />
               <MoviesList onEdit={handleEditClick} />
             </>
           )}
