@@ -27,3 +27,12 @@ export async function addMovie(
 
   return newMovie
 }
+
+export async function deleteMovie(id: number, db = connection): Promise<Movie | null> {
+  const [deletedMovie] = await db('movies')
+    .where({ id })
+    .del()
+    .returning(['id', 'name', 'genre', 'done'])
+
+  return deletedMovie || null
+}
