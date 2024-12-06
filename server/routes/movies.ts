@@ -51,4 +51,23 @@ router.post('/', async (req, res) => {
   }
 })
 
+// DELETE
+router.delete('/:id', async (req, res) => {
+  const id = Number(req.params.id)
+  if (isNaN(id)) {
+    return res.status(400).json({ error: 'Invalid ID' })
+  }
+
+  try {
+    const deletedMovie = await db.deleteMovie(id)
+    if (!deletedMovie) {
+      return res.status(404).json({ error: 'Movie not found' })
+    }
+    res.json({ message: 'Movie deleted successfully' })
+  } catch (error) {
+    console.error(`Database error: ${error}`)
+    res.status(500).json({ error: 'Failed to delete movie' })
+  }
+})
+
 export default router
