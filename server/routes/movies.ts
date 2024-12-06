@@ -114,5 +114,6 @@ router.delete('/:id', async (req, res) => {
     res.status(500).json({ error: 'Failed to delete movie' })
   }
 })
-
+//3- These errors appeared: Database error: TypeError: (intermediate value) is not iterable
+//Database error: TypeError: (intermediate value) is not iterable.
 export default router

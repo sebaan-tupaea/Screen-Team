@@ -1,5 +1,6 @@
 import { useState } from 'react'
 
+//1-When adding a movie, a message saying it was saved successfully does not appear, but the screen becomes clear for the next one to be added. And the movie is added.
 function AddMovieForm({ onMovieAdded }: { onMovieAdded: () => void }) {
   const [name, setName] = useState('')
   const [genre, setGenre] = useState('')
