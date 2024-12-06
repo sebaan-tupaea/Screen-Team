@@ -51,14 +51,6 @@ export async function updateMovieDone(
   await db('movies').where({ id }).update('done', done)
 }
 
-export async function deleteMovie(
-  id: number,
-  db = connection,
-): Promise<Movie | null> {
-  const [deletedMovie] = await db('movies')
-    .where({ id })
-    .del()
-    .returning(['id', 'name', 'genre', 'done'])
-
-  return deletedMovie || null
+export async function deleteMovie(id: number, db = connection) {
+  await db('movies').where({ id }).del()
 }

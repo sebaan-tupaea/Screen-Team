@@ -1,6 +1,5 @@
 import React from 'react'
 
-//2-When deleting a movie, a message appears (Are you sure you want to delete this movie?), I click ok and the message that it was deleted successfully does not appear either, and then the screen remains the same as it was, it does not change. And the movie is deleted.
 interface DeleteMovieProps {
   movieId: number
   onDeleteSuccess: (movieId: number) => void
