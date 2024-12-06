@@ -28,11 +28,29 @@ export async function addMovie(
   return newMovie
 }
 
-export async function deleteMovie(id: number, db = connection): Promise<Movie | null> {
-  const [deletedMovie] = await db('movies')
-    .where({ id })
-    .del()
-    .returning(['id', 'name', 'genre', 'done'])
+export async function updateMovie(
+  updatedMovie: Movie,
+  db = connection,
+): Promise<Movie> {
+  const { id, name, genre, done } = updatedMovie
 
-  return deletedMovie || null
+  await db('movies').where({ id }).update({
+    name,
+    genre,
+    done,
+  })
+  const updatedRecord = await db('movies').select('*').where({ id }).first()
+  return updatedRecord as Movie
+}
+
+export async function updateMovieDone(
+  id: number,
+  done: boolean,
+  db = connection,
+): Promise<void> {
+  await db('movies').where({ id }).update('done', done)
+}
+
+export async function deleteMovie(id: number, db = connection) {
+  await db('movies').where({ id }).del()
 }

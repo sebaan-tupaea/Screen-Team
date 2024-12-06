@@ -5,11 +5,14 @@ interface DeleteMovieProps {
   onDeleteSuccess: (movieId: number) => void
 }
 
-const DeleteMovie: React.FC<DeleteMovieProps> = ({ movieId, onDeleteSuccess }) => {
+const DeleteMovie: React.FC<DeleteMovieProps> = ({
+  movieId,
+  onDeleteSuccess,
+}) => {
   const handleDelete = async () => {
     try {
       const response = await fetch(`/api/v1/movies/${movieId}`, {
-        method: 'DELETE'
+        method: 'DELETE',
       })
 
       if (response.ok) {
@@ -22,11 +25,7 @@ const DeleteMovie: React.FC<DeleteMovieProps> = ({ movieId, onDeleteSuccess }) =
     }
   }
 
-  return (
-    <button onClick={handleDelete}>
-      Delete
-    </button>
-  )
+  return <button onClick={handleDelete}>Delete</button>
 }
 
 export default DeleteMovie

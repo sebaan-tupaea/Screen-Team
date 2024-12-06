@@ -1,16 +1,30 @@
-const API_URL = 'http://localhost:3000/api/v1/movies' // Adjust if needed I am actually unsure of this...
+import request from 'superagent'
+import { Movie, MovieData } from '../../models/movie'
 
-// Function to get all movies
-export const getAllMovies = async () => {
-  try {
-    const response = await fetch(API_URL)
-    if (!response.ok) {
-      throw new Error('Network response was not ok')
-    }
-    const data = await response.json()
-    return data
-  } catch (error) {
-    console.error('Error fetching movies:', error)
-    throw error
-  }
+const rootURL = '/api/v1/movies'
+
+export async function getAllMovies(): Promise<Movie[]> {
+  const res = await request.get(rootURL)
+  return res.body
+}
+
+export async function getAllMoviesById(id: number): Promise<Movie> {
+  const res = await request.get(`${rootURL}/${id}`)
+  return res.body
+}
+
+export async function addNewMovie(newMovie: MovieData) {
+  await request.post(rootURL).send(newMovie)
+}
+
+export async function deleteMovie(id: number) {
+  await request.del(`${rootURL}/${id}`).then((res) => res)
+}
+
+export async function updateMovie(
+  id: number,
+  updatedMovie: MovieData,
+): Promise<Movie> {
+  const response = await request.patch(`${rootURL}/${id}`).send(updatedMovie)
+  return response.body as Movie
 }

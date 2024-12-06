@@ -51,20 +51,60 @@ router.post('/', async (req, res) => {
   }
 })
 
+router.patch('/:id', async (req, res) => {
+  const id = Number(req.params.id)
+  const updateMovie = req.body
+  if (isNaN(id) || !updateMovie.name || !updateMovie.genre) {
+    return res.status(400).json({ error: 'Invalid request data' })
+  }
+  try {
+    const movie = await db.updateMovie({ id, ...updateMovie })
+    res.status(200).json(movie)
+  } catch (error) {
+    console.error(`Database error: ${error}`)
+    res.status(500).json({ error: 'Failed to update movie' })
+  }
+})
 
-// DELETE 
+// PATCH 'api/v1/movies/done/:id'
+router.patch('/done/:id', async (req, res) => {
+  const id = Number(req.params.id)
+  if (isNaN(id) || id < 1) {
+    return res.status(400).json({ error: 'ID invalid' })
+  }
+  try {
+    await db.updateMovieDone(id, true)
+    res.status(200).json({ message: 'Movie marked as completed' })
+  } catch (error) {
+    console.error(`Database error: ${error}`)
+    res.status(500).json({ error: 'Failed to update movie' })
+  }
+})
+
+// PATCH 'api/v1/movies/not-done/:id'
+router.patch('/not-done/:id', async (req, res) => {
+  const id = Number(req.params.id)
+  if (isNaN(id) || id < 1) {
+    return res.status(400).json({ error: 'ID invalid' })
+  }
+  try {
+    await db.updateMovieDone(id, false)
+    res.status(200).json({ message: 'Movie marked as not completed' })
+  } catch (error) {
+    console.error(`Database error: ${error}`)
+    res.status(500).json({ error: 'Failed to update movie' })
+  }
+})
+
+// DELETE
 router.delete('/:id', async (req, res) => {
   const id = Number(req.params.id)
   if (isNaN(id)) {
     return res.status(400).json({ error: 'Invalid ID' })
   }
-
   try {
-    const deletedMovie = await db.deleteMovie(id)
-    if (!deletedMovie) {
-      return res.status(404).json({ error: 'Movie not found' })
-    }
-    res.json({ message: 'Movie deleted successfully' })
+    await db.deleteMovie(id)
+    res.status(200).json({ message: 'Movie deleted successfully' })
   } catch (error) {
     console.error(`Database error: ${error}`)
     res.status(500).json({ error: 'Failed to delete movie' })
